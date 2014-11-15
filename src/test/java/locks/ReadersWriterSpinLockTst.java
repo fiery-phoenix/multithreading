@@ -1,4 +1,4 @@
-package counters;
+package locks;
 
 import java.util.ArrayList;
 import java.util.List;
