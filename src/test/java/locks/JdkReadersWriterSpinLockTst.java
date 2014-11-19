@@ -8,12 +8,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
-public class ReadersWriterSpinLockTst {
+public class JdkReadersWriterSpinLockTst {
 	private final CountDownLatch latch = new CountDownLatch(1);
 
 	private final AtomicLong readers = new AtomicLong();
@@ -22,7 +23,7 @@ public class ReadersWriterSpinLockTst {
 	private final AtomicLong readersCounter = new AtomicLong();
 	private final AtomicLong writersCounter = new AtomicLong();
 
-	private final CurrentReadWriteLock spinLock = new CurrentReadWriteLock();
+	private final ReentrantReadWriteLock spinLock = new ReentrantReadWriteLock();
 
 	private volatile boolean stop = false;
 
@@ -59,7 +60,7 @@ public class ReadersWriterSpinLockTst {
 
 			try {
 				while (!stop) {
-					spinLock.acquireReadLock();
+					spinLock.readLock().lock();
 					try {
 //						spinLock.acquireReadLock();
 						try {
@@ -71,7 +72,7 @@ public class ReadersWriterSpinLockTst {
 //							spinLock.releaseReadLock();
 						}
 					} finally {
-						spinLock.releaseReadLock();
+						spinLock.readLock().unlock();
 					}
 				}
 			} catch (Exception e) {
@@ -90,7 +91,7 @@ public class ReadersWriterSpinLockTst {
 
 			try {
 				while (!stop) {
-					spinLock.acquireWriteLock();
+					spinLock.writeLock().lock();
 					try {
 //						spinLock.acquireWriteLock();
 						try {
@@ -120,7 +121,7 @@ public class ReadersWriterSpinLockTst {
 //							spinLock.releaseWriteLock();
 						}
 					} finally {
-						spinLock.releaseWriteLock();
+						spinLock.writeLock().unlock();
 					}
 
 					consumeCPU(1000);
