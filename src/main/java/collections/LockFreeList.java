@@ -28,11 +28,12 @@ public class LockFreeList<E> extends AbstractList<E> {
 	private static class WriteOperation<E> {
 		private final E newValue;
 		private final int index;
-		private AtomicBoolean pending = new AtomicBoolean(true);
+		private final AtomicBoolean pending;
 
 		public WriteOperation(E newValue, int index) {
 			this.newValue = newValue;
 			this.index = index;
+			this.pending = new AtomicBoolean(true);
 		}
 
 		public WriteOperation(E newValue, int index, AtomicBoolean pending) {
