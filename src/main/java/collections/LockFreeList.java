@@ -121,6 +121,6 @@ public class LockFreeList<E> extends AbstractList<E> {
 		Descriptor descriptor = descriptorRef.get();
 		int size = descriptor.size;
 
-		return descriptor.writeOperation.pending.get() ? --size : size;
+		return descriptor.writeOperation.pending.get() ? size - 1 : size;
 	}
 }
