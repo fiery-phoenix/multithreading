@@ -1,6 +1,6 @@
 package locks;
 
-import counters.MapCounterLazy;
+import counters.MapCounterForLock;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
@@ -11,12 +11,11 @@ import java.util.concurrent.locks.LockSupport;
 public class ReadWriteLockWithPark {
 
     private final AtomicInteger writeCount = new AtomicInteger();
-    private final MapCounterLazy readCount = new MapCounterLazy();
+    private final MapCounterForLock readCount = new MapCounterForLock();
     private final ConcurrentLinkedQueue<Thread> readers = new ConcurrentLinkedQueue<>();
 
     public void acquireReadLock() {
         while (true) {
-//            LockSupport.unpark(Thread.currentThread());
             readCount.inc();
 
             if (writeCount.get() == 0) {
@@ -29,7 +28,6 @@ public class ReadWriteLockWithPark {
             if (writeCount.get() > 0) {
                 LockSupport.park();
             }
-//            readers.remove(Thread.currentThread());
         }
     }
 

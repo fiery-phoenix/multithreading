@@ -1,9 +1,6 @@
 package locks;
 
-import counters.MapCounterLazy;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.LockSupport;
+import counters.MapCounterForLock;
 
 /**
  * @author Kseniya Panasyuk (KPanasiuk@luxoft.com)
@@ -11,7 +8,7 @@ import java.util.concurrent.locks.LockSupport;
 public class ReadWriteLockWithCLH {
 
     private final CLHQueueLock writeCount = new CLHQueueLock();
-    private final MapCounterLazy readCount = new MapCounterLazy();
+    private final MapCounterForLock readCount = new MapCounterForLock();
 
     public void acquireReadLock() {
         while (true) {
